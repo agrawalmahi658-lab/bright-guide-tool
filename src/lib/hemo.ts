@@ -49,7 +49,7 @@ export const severityLabel: Record<Severity, string> = {
 /** Least-squares slope of hb over days. */
 export function trendPerWeek(readings: Reading[]): number {
   if (readings.length < 2) return 0;
-  const t0 = new Date(readings[0].date).getTime();
+  const t0 = new Date(readings[0]!.date).getTime();
   const pts = readings.map((r) => ({
     x: (new Date(r.date).getTime() - t0) / 86_400_000,
     y: r.hb,
@@ -66,7 +66,7 @@ export function trendPerWeek(readings: Reading[]): number {
 /** Projected Hb `weeks` ahead, damped so it never runs away. */
 export function forecast(readings: Reading[], weeks: number): number {
   if (!readings.length) return 0;
-  const last = readings[readings.length - 1].hb;
+  const last = readings[readings.length - 1]!.hb;
   const slope = trendPerWeek(readings);
   const damped = Math.sign(slope) * Math.min(Math.abs(slope), 0.35);
   return Math.max(4, Math.min(19, last + damped * weeks));
@@ -81,7 +81,7 @@ export function riskScore(
   sex: Sex,
 ): number {
   if (!readings.length) return 0;
-  const hb = readings[readings.length - 1].hb;
+  const hb = readings[readings.length - 1]!.hb;
   const low = NORMAL_RANGE[sex][0];
 
   // deficit term: 0 at normal, 60 at 4 g/dL below normal
